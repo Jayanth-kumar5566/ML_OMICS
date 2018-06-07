@@ -23,11 +23,11 @@ y2=X[:,60].astype('int') #Mild severe and Moderate
 X=X[:,1:60].astype('int') #Data
 
 
-fig = plt.figure(1, figsize=(4, 3))
-plt.clf()
-ax = Axes3D(fig, rect=[0, 0, .95, 1], elev=48, azim=134)
+#fig = plt.figure(1, figsize=(4, 3))
+#plt.clf()
+#ax = Axes3D(fig, rect=[0, 0, .95, 1], elev=48, azim=134)
 
-plt.cla()
+#plt.cla()
 pca = decomposition.SparsePCA(n_components=3)
 pca.fit(X)
 X = pca.transform(X)
