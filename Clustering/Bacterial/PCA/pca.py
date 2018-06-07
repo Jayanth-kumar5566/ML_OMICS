@@ -27,6 +27,7 @@ X=X[:,1:]
 
 #y = Y[:,2].astype('int')
 
+'''
 fig = plt.figure(1, figsize=(4, 3))
 plt.clf()
 ax = Axes3D(fig, rect=[0, 0, .95, 1], elev=48, azim=134)
@@ -44,6 +45,14 @@ ax.w_yaxis.set_ticklabels([])
 ax.w_zaxis.set_ticklabels([])
 
 plt.show()
+'''
 
 
+#==========2D PCA====================
+pca = decomposition.SparsePCA(n_components=3)
+pca.fit(X)
+X = pca.transform(X)
 
+plt.scatter(X[:, 0], X[:, 1],s=50)
+
+plt.show()
