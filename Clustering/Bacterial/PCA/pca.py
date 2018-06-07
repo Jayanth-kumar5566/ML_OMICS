@@ -32,12 +32,13 @@ pca = decomposition.SparsePCA(n_components=3)
 pca.fit(X)
 X = pca.transform(X)
 
-ax.scatter(X[:, 0], X[:, 1],X[:, 2],c=y2,s=50)
+z=ax.scatter(X[:, 0], X[:, 1],X[:, 2],c=y1,s=50,cmap='seismic')
 
 ax.w_xaxis.set_ticklabels([])
 ax.w_yaxis.set_ticklabels([])
 ax.w_zaxis.set_ticklabels([])
 
+plt.colorbar(z)
 plt.show()
 
 
