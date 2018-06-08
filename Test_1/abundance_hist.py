@@ -14,6 +14,7 @@ del controls["Status"]
 
 
 x_ticks=patients.columns.tolist()
+
 plt.xticks(range(59), x_ticks, rotation=90)
 
 for i in patno:
@@ -23,6 +24,14 @@ for i in patno:
         plt.scatter(range(59),controls.loc[str(i)],color='blue')
 
 
+plt.show()
+
+
+#=============Plotting the mean of them====================
+
+plt.xticks(range(59), x_ticks, rotation=90,size=8)
+plt.scatter(range(59),patients.mean(),color='red')
+plt.scatter(range(59),controls.mean(),color='blue')
 plt.show()
 
     
