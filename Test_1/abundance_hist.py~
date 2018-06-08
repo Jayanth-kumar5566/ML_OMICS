@@ -1,0 +1,20 @@
+import matplotlib.pyplot as plt
+import pandas
+
+df=pandas.read_csv("./bacterial_microbiome.csv")
+df.dropna(axis=0,how='any',inplace=True)
+df.set_index("PatientID",inplace=True)
+patno=df.index.tolist()
+
+patients=df[df.Status=="Bronchiectasis"]
+controls=df[df.Status=="Healthy"]
+
+del patients["Status"]
+del controls["Status"]
+
+for i in patno:
+    try:
+        plt.stem(range(59),patients.loc[str(i)])
+    except:
+        pass
+
