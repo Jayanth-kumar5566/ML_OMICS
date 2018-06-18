@@ -2,9 +2,9 @@ library(vegan)
 library(Rtsne)
 library(cluster)
 
-data=read.csv("Documents/MS/ML_OMICS/Clustering/Bacterial/bacterial_microbiome.csv")
+?data=read.csv("Documents/MS/ML_OMICS/Clustering/Bacterial/bacterial_microbiome.csv")
 result <- data[-1]
-row.names(result) <- data$id
+row.names(result) <- data$PatientID
 #Remove rows with missing values
 result<-na.omit(result)
 #Work with result
@@ -52,8 +52,20 @@ layout(matrix(1:3, nrow=1))
 plot(hc.m)
 plot(hc.s)
 plot(hc.c)
-#----------------DBSCAN---------------------------
-layout(matrix(1:2, nrow=1))
-plot(density(na.omit(Bray_curtis_diss[upper.tri(Bray_curtis_diss)])), main="kernel density")
-plot(ecdf(Bray_curtis_diss[upper.tri(Bray_curtis_diss)]), main="ECDF")
+
+#------------------hclust----------------------------
+hc=hclust(Bray_curtis_diss, method="ward.D2")
+plot(hc)
+clusts=cutree(hc,k=2)
+table(clusts)
+rownames(result)[clusts==1] #people in cluster 1
+
+#Calculating Clustering Statistics (GAP)
+library(factoextra)
+fviz_cluster(list(data = result, cluster = clusts))
+fviz_nbclust(Diss_matrx, FUN = hcut, method = "silhouette")
+
+gap_stat <- clusGap(Diss_matrx, FUN = hcut, nstart = 25, K.max = 10, B = 50)
+fviz_gap_stat(gap_stat)
+
 
