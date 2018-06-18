@@ -32,7 +32,7 @@ lines(1:15, sil_width)
 
 #the silhouette anlaysis yeilds that there are 3 clusters(from plot)
 
-pam_fit <- pam(Bray_curtis_diss, diss = TRUE, k = 4)
+pam_fit <- pam(Bray_curtis_diss, diss = TRUE, k = 2)
 
 #Visuvalization on tSNE
 plot(tsne_obj$Y,col=pam_fit$clustering)
