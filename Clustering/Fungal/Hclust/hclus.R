@@ -59,6 +59,9 @@ plot(hc)
 clusts=cutree(hc,k=2)
 table(clusts)
 rownames(result)[clusts==1] #people in cluster 1
+sil=silhouette(cutree(hc,k=2),Bray_curtis_diss)
+summary(sil)
+
 
 #Calculating Clustering Statistics (GAP)
 library(factoextra)
