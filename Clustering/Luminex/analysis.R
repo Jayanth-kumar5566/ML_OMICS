@@ -25,3 +25,17 @@ errors
 
 
 corrplot(cor(data))
+
+
+#Clustering
+library(cluster)
+
+#kMeans
+wit=c(NA)
+for(i in 2:10){wit[i]=kmeans(data,i)$tot.withinss}
+plot(1:10,wit)
+lines(1:10,wit)
+
+#hclust
+hc=hclust(dist(data),method="ward.D2")
+plot(hc)
