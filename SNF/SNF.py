@@ -83,7 +83,7 @@ def SNF_merge(S_M,K,t):
         iter += 1        
     P_c=(P1+P2)/2
     return P_c
-P_m=SNF_merge([W1,W2],229,10)
+P_m=SNF_merge([W1,W2],20,10)
 
 #================Clustering====================
 from sklearn.decomposition import PCA
@@ -101,7 +101,7 @@ def get_n_clusters(arr, n_clusters=range(2, 10)):
 print "Optimal number of clusters using eigen gap", get_n_clusters(P_m)
 
 from sklearn.cluster import SpectralClustering
-sc = SpectralClustering(2, affinity='precomputed', n_init=100, assign_labels='discretize')
+sc = SpectralClustering(2, affinity='precomputed', n_init=1000, assign_labels='discretize')
 sc.fit(P_m)
 
 
