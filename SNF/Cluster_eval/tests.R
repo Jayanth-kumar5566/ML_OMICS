@@ -47,7 +47,7 @@ for (i in nam[9:16]){
 #Categorical
 for (i in nam[9:16])
 {
-#i=10
+#i=14
 p1=pop1[[i]]
 p2=pop2[[i]]
 p1=na.omit(p1)
