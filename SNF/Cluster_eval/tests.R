@@ -24,7 +24,8 @@ nam=colnames(data)
 
 #Numerical
 for (i in nam[1:8])
-{p1=pop1[[i]]
+{
+p1=pop1[[i]]
 p2=pop2[[i]]
 
 #t=kruskal.test(list(p1,p2))
