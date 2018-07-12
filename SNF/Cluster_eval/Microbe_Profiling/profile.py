@@ -1,13 +1,15 @@
 import pandas
 import matplotlib.pyplot as plt
-df=pandas.read_csv("fungi.csv")
+import numpy
+df=pandas.read_csv("bacteria.csv")
 df.set_index("PatientID",inplace=True)
 pop1=df[df.x==1]
 pop2=df[df.x==2]
 
-mat=pop2.values[:,:-1]
-x=pop2.columns[:-1]
+mat=pop1.values[:,:-1]
+x=pop1.columns[:-1]
 
+'''
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 ax = plt.subplot(111)
 ax.set_xticks(range(mat.shape[1]))
@@ -23,7 +25,7 @@ plt.show()
 '''
 
 #Plot average
-y=mat.mean(axis=0)
+y=numpy.median(mat,axis=0)
 y=y.reshape(1,y.shape[0])
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 ax = plt.subplot(111)
@@ -34,7 +36,7 @@ plt.title("Bacterial Cluster 1 average")
 divider = make_axes_locatable(ax)
 cax = divider.append_axes("right", size="5%", pad=0.05)
 plt.colorbar(im, cax=cax)
-plt.show()
+#plt.show()
 
 d=dict()
 for i in range(len(x)):
@@ -47,4 +49,3 @@ for i in d[::-1]:
     file.write(str(i[0])+": "+str(i[1])+"\n")
 
 file.close()
-'''
