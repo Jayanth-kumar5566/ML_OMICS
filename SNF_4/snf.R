@@ -12,10 +12,10 @@ W3=(as.matrix(l_dsim)-1)*-1
 x=W3
 estimateNumberOfClustersGivenGraph(x)
 displayClusters(x, spectralClustering(x, K = 3))
-W = SNF(list(W1,W2,W3),20,200)
+W = SNF(list(W1,W2,W3),20,100)
 estimateNumberOfClustersGivenGraph(W)
-displayClusters(W, spectralClustering(W, K = 2))
-C=3
+displayClusters(W, spectralClustering(W, K = 5))
+C=5
 labels=spectralClustering(W,C)
 write.csv(W,"Documents/MS/ML_OMICS/SNF_4/merged_matrix.csv")
 write.csv(labels,"Documents/MS/ML_OMICS/SNF_4/labels.csv")
