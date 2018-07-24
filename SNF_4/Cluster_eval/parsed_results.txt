@@ -1,0 +1,41 @@
+[1] "A.terreus_conidial_burden_qPCR"
+
+1 - 2
+2 - 3
+1 - 5
+3 - 5
+[1] "MMRC_score"
+
+1 - 2
+1 - 3
+2 - 3
+1 - 4
+2 - 4
+1 - 5
+[1] "No_of_hospital_adm_1yr_before_study"
+
+1 - 5
+2 - 5
+3 - 5
+[1] "No_of_exacerbations_1yr_before_study"
+
+1 - 2
+1 - 3
+1 - 4
+2 - 5
+[1] "Disease_severity"
+
+[1] "Inhaled.corticosteroids..Yes.0..No.1."
+
+1 - 2
+1 - 3
+1 - 4
+2 - 4
+[1] "Mucolytic..Yes.0..No.1."
+
+1 - 2
+1 - 5
+[1] "Antifungal..Yes.0..No.1."
+
+[1] "Oral.steroids..Yes.0..No.1."
+

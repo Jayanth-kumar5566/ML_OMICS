@@ -1,5 +1,6 @@
 library("SNFtool")
 library("vegan")
+library("RColorBrewer")
 b_data=read.csv("Documents/MS/ML_OMICS/SNF/bacteria.csv")
 f_data=read.csv("Documents/MS/ML_OMICS/SNF/fungi.csv")
 l_data=read.csv("Documents/MS/ML_OMICS/SNF/luminex.csv")
