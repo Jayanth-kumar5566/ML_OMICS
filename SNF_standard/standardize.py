@@ -18,11 +18,10 @@ def normalize(x):
     for i in range(len(x)):
         x[i]=(x[i]/t)*100
     return x
-'''
+
 df=df.apply(zscore,axis=0)
 df1=df1.apply(zscore,axis=0)
 df2=df2.apply(zscore,axis=0)
-
 
 #Translate the values such that all the values are positive
 mini=numpy.min([numpy.min(df.values),numpy.min(df1.values),numpy.min(df2.values)])
@@ -30,12 +29,12 @@ df=df+abs(mini)
 df1=df1+abs(mini)
 df2=df2+abs(mini)
 print "Setting the mean to ",mini
-'''
 
+'''
 df=df.apply(normalize,axis=1)
 df1=df1.apply(normalize,axis=1)
 df2=df2.apply(normalize,axis=1)
-
+'''
 df.to_csv("luminex.csv")
 df1.to_csv("bacteria.csv")
 df2.to_csv("fungi.csv")
