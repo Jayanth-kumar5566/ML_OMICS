@@ -32,9 +32,9 @@ p2=pop2[[i]]
 p3=pop3[[i]]
 boxplot(p1,p2,p3,xlab=i)
 
-p1=na.omit(p1[!p1 %in% boxplot.stats(p1)$out])
-p2=na.omit(p2[!p2 %in% boxplot.stats(p2)$out])
-p3=na.omit(p3[!p3 %in% boxplot.stats(p3)$out])
+#p1=na.omit(p1[!p1 %in% boxplot.stats(p1)$out])
+#p2=na.omit(p2[!p2 %in% boxplot.stats(p2)$out])
+#p3=na.omit(p3[!p3 %in% boxplot.stats(p3)$out])
 
 t=kruskal.test(x=list(p1,p2,p3))
 #t=wilcox.test(p1,p2,alternative = "two.sided",paired=FALSE)

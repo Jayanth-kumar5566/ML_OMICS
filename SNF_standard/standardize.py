@@ -33,9 +33,9 @@ print "Setting the mean to ",mini
 '''
 
 df=df.apply(normalize,axis=1)
-df1=df1.apply(normalize,axis=1)
-df2=df2.apply(normalize,axis=1)
+#df1=df1.apply(normalize,axis=1)
+#df2=df2.apply(normalize,axis=1)
 
 df.to_csv("luminex.csv")
-df1.to_csv("bacteria.csv")
-df2.to_csv("fungi.csv")
+#df1.to_csv("bacteria.csv")
+#df2.to_csv("fungi.csv")
