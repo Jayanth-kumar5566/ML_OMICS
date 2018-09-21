@@ -1,0 +1,25 @@
+Joining Bacterial and Fungal
+
+Undersampling results
+
+1. Accuracy varies between 45 to 78 and the mean accuracy is 55. Normally distributed
+
+2. Accuracy varies a lot since the undersampling or chooing of under samples depeneds upon the seed and its
+randomly sampled at each iteration, and the acuracy varies since at each iteration different samples are 
+choosen for training and testing together
+
+Oversampling Results
+
+1.SMOTE was applied for the oversampling, then the number of exacerbations was converted to the the groups
+called Frequent Exacerbations and Non-frequent exacebators
+
+2.The accuracies followed normal distribution and varies between 58 to 83 and the mean is 70
+
+ 
+Only Bacterial with SMOTE
+
+1. Average Accuracy is 58.19 varies between 39 to 69
+
+Only Fungi with SMOTE
+
+1. Average Accuracy with Fungi only is 53.47 and varies between 40 to 65 
