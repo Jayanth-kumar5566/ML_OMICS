@@ -17,8 +17,30 @@ print(var(r_s))
 remove(r_s,i,data)
 
 library(mboost)
-cr_mat=cor(c1_data,method = "spearman")
-cr_mat[is.na(cr_mat)]<-0
+# For c1_data
+cr_mat=cor(c1_data,method = "spearman") #Compute Spearman Correlation
+cr_mat[is.na(cr_mat)]<-0  # Assign 0 to NA values(NA due to zero STD)
 
-cols=which(abs(cr_mat[1,]) > 0.05, arr.ind = T)
-rownames(as.data.frame(cols))
+i=3
+#for (i in 1:539){
+  x_nam=rownames(cr_mat)[i]
+  ind1=abs(cr_mat[i,]) > 0.05 & abs(cr_mat[i,]) != 1
+  cool=which(ind1, arr.ind = T)
+  y_nam=rownames(as.data.frame(cool))
+  print(x_nam) #Row name
+  print(y_nam) #Column names with correlation >0.05
+#}
+
+  #Formula
+form=as.formula(paste(x_nam,paste(y_nam,collapse = "+"),sep="~"))
+glm(form,data=c1_data )
+
+#GLMBoosting and Model Tuning
+model1<-glmboost(form,data=c1_data,family = Gaussian(),
+         center=TRUE,control = boost_control(mstop=200,nu=0.05,trace=TRUE))
+#coef(model1,which="")
+
+rmse<-function(x1,x2){sqrt(mean((x1-x2)^2))}
+
+#To look on more
+cvm<-cvrisk(model1)
