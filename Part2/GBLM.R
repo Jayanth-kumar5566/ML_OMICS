@@ -21,52 +21,57 @@ library(mboost)
 cr_mat=cor(c1_data,method = "spearman") #Compute Spearman Correlation
 cr_mat[is.na(cr_mat)]<-0  # Assign 0 to NA values(NA due to zero STD)
 
-i=1
-#for (i in 1:539){
-  x_nam=rownames(cr_mat)[i]
-  ind1=abs(cr_mat[i,]) > 0.05 & abs(cr_mat[i,]) != 1
-  cool=which(ind1, arr.ind = T)
-  y_nam=rownames(as.data.frame(cool))
-  print(x_nam) #Row name
-  print(y_nam) #Column names with correlation >0.05
-#}
-
-  #Formula
-form=as.formula(paste(x_nam,paste(y_nam,collapse = "+"),sep="~"))
-glm(form,data=c1_data )
-
 #Adjacency matrix creation
 m=matrix(0,ncol=dim(cr_mat)[1],nrow=dim(cr_mat)[2])
 m<-data.frame(m,row.names = colnames(c1_data))
 colnames(m)<-colnames(c1_data)
-
-#GLMBoosting and Model Tuning, Depends on randomness
-model1<-glmboost(form,data=c1_data,family = Gaussian(),
-         center=TRUE,control = boost_control(mstop=200,nu=0.05,trace=TRUE))
-
-#Induces randomness, can loop and take the nearest average integer
-f<-cv(model1$`(weights)`,type="kfold",B=10)
-cvm<-cvrisk(model1,folds=f)
-opt_m<-mstop(cvm)
-print(opt_m)
 
 rmse<-function(model,col=i,data=c1_data){
   error=sqrt(mean((predict(model,data)-data[[col]])^2))
   return(error)
 }
 
-#Choosing the optimal model
-model1[opt_m]
-wghts<-coef(model1,which="")
-x<-t(as.data.frame(wghts[-1]))
-row.names(x)<-x_nam
-
-#Appending the coefficient matrix to adjacency matrix
-for(cl in colnames(x)){
-  m[x_nam,cl]<-x[x_nam,cl]
+for (i in 1:539){
+  x_nam=rownames(cr_mat)[i]
+  ind1=abs(cr_mat[i,]) > 0.05 & abs(cr_mat[i,]) != 1
+  cool=which(ind1, arr.ind = T)
+  y_nam=rownames(as.data.frame(cool)) #Column names with correlation >0.05
+  if(identical(y_nam,character(0)) == TRUE){y_nam="."}
+  print(x_nam) #Row name
+  #Formula
+  form=as.formula(paste(x_nam,paste(y_nam,collapse = "+"),sep="~"))
+  glm(form,data=c1_data )
+  #GLMBoosting and Model Tuning, Depends on randomness
+  model1<-glmboost(form,data=c1_data,family = Gaussian(),
+                   center=TRUE,control = boost_control(mstop=200,nu=0.05,trace=TRUE))
+  #Induces randomness, can loop and take the nearest average integer
+  f<-cv(model1$`(weights)`,type="kfold",B=10)
+  cvm<-cvrisk(model1,folds=f)
+  opt_m<-mstop(cvm)
+  if(opt_m==0){opt_m=1}
+  #Choosing the optimal model
+  model1[opt_m]
+  wghts<-coef(model1,which="")
+  x<-t(as.data.frame(wghts[-1]))
+  row.names(x)<-x_nam
+  
+  #Appending the coefficient matrix to adjacency matrix
+  for(cl in colnames(x)){
+    m[x_nam,cl]<-x[x_nam,cl]
+  }
+  error=rmse(model1,col=i)
+  print(error)
 }
 
-error=rmse(model1,col=i)
-print(error)
+
+
+
+
+
+
+
+
+
+
 
 
