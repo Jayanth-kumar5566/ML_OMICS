@@ -35,6 +35,11 @@ i=1
 form=as.formula(paste(x_nam,paste(y_nam,collapse = "+"),sep="~"))
 glm(form,data=c1_data )
 
+#Adjacency matrix creation
+m=matrix(0,ncol=dim(cr_mat)[1],nrow=dim(cr_mat)[2])
+m<-data.frame(m,row.names = colnames(c1_data))
+colnames(m)<-colnames(c1_data)
+
 #GLMBoosting and Model Tuning, Depends on randomness
 model1<-glmboost(form,data=c1_data,family = Gaussian(),
          center=TRUE,control = boost_control(mstop=200,nu=0.05,trace=TRUE))
@@ -43,6 +48,7 @@ model1<-glmboost(form,data=c1_data,family = Gaussian(),
 f<-cv(model1$`(weights)`,type="kfold",B=10)
 cvm<-cvrisk(model1,folds=f)
 opt_m<-mstop(cvm)
+print(opt_m)
 
 rmse<-function(model,col=i,data=c1_data){
   error=sqrt(mean((predict(model,data)-data[[col]])^2))
@@ -51,7 +57,16 @@ rmse<-function(model,col=i,data=c1_data){
 
 #Choosing the optimal model
 model1[opt_m]
-coef(model1,which="")
+wghts<-coef(model1,which="")
+x<-t(as.data.frame(wghts[-1]))
+row.names(x)<-x_nam
+
+#Appending the coefficient matrix to adjacency matrix
+for(cl in colnames(x)){
+  m[x_nam,cl]<-x[x_nam,cl]
+}
+
 error=rmse(model1,col=i)
 print(error)
+
 
