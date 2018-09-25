@@ -21,7 +21,7 @@ library(mboost)
 cr_mat=cor(c1_data,method = "spearman") #Compute Spearman Correlation
 cr_mat[is.na(cr_mat)]<-0  # Assign 0 to NA values(NA due to zero STD)
 
-i=3
+i=1
 #for (i in 1:539){
   x_nam=rownames(cr_mat)[i]
   ind1=abs(cr_mat[i,]) > 0.05 & abs(cr_mat[i,]) != 1
@@ -35,12 +35,23 @@ i=3
 form=as.formula(paste(x_nam,paste(y_nam,collapse = "+"),sep="~"))
 glm(form,data=c1_data )
 
-#GLMBoosting and Model Tuning
+#GLMBoosting and Model Tuning, Depends on randomness
 model1<-glmboost(form,data=c1_data,family = Gaussian(),
          center=TRUE,control = boost_control(mstop=200,nu=0.05,trace=TRUE))
-#coef(model1,which="")
 
-rmse<-function(x1,x2){sqrt(mean((x1-x2)^2))}
+#Induces randomness, can loop and take the nearest average integer
+f<-cv(model1$`(weights)`,type="kfold",B=10)
+cvm<-cvrisk(model1,folds=f)
+opt_m<-mstop(cvm)
 
-#To look on more
-cvm<-cvrisk(model1)
+rmse<-function(model,col=i,data=c1_data){
+  error=sqrt(mean((predict(model,data)-data[[col]])^2))
+  return(error)
+}
+
+#Choosing the optimal model
+model1[opt_m]
+coef(model1,which="")
+error=rmse(model1,col=i)
+print(error)
+
