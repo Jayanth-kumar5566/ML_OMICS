@@ -31,7 +31,8 @@ rmse<-function(model,col=i,data=c1_data){
   return(error)
 }
 
-for (i in 1:539){
+i=2
+#for (i in 1:539){
   x_nam=rownames(cr_mat)[i]
   ind1=abs(cr_mat[i,]) > 0.05 & abs(cr_mat[i,]) != 1
   cool=which(ind1, arr.ind = T)
@@ -61,14 +62,24 @@ for (i in 1:539){
   }
   error=rmse(model1,col=i)
   print(error)
+#}
+
+  #Bootstrap distribution
+#------------Using boot-----------------  
+library(boot)
+boot.stat<-function(data,indices,m_stop,form,x_nam){
+  data<-data[indices,]
+  mod<-glmboost(form,data=data,family = Gaussian(),
+                center=TRUE,control = boost_control(mstop=m_stop,nu=0.05,trace=TRUE))
+  wghts<-coef(mod,which="")
+  x<-t(as.data.frame(wghts[-1]))
+  row.names(x)<-x_nam
+  return(x)
 }
 
+model.boot<-boot(c1_data,boot.stat,100,m_stop=opt_m,form=form,x_nam=x_nam)
 
-
-
-
-
-
+#----------Using Creepe----------------
 
 
 
