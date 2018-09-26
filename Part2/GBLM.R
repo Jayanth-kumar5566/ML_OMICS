@@ -95,3 +95,5 @@ out<-boot.stat(c1_data_p,indices = 1:dim(c1_data)[1],m_stop=opt_m,form=form,x_na
 out_comb=rbind(out_comb,out)
 counter = counter + 1
 }
+out_comb<-out_comb[-1,]
+#--------------------------------------------------------
