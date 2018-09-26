@@ -79,10 +79,19 @@ boot.stat<-function(data,indices,m_stop,form,x_nam){
 
 model.boot<-boot(c1_data,boot.stat,100,m_stop=opt_m,form=form,x_nam=x_nam)
 
-#----------Using Creepe----------------
+model.boot$t[,1] #hist values for iteration here 1
 
-
-
-
-
-
+#-----------Permutation with renormalization-------------
+#copy of the data
+c1_data_p=c1_data
+out_comb<-x
+#permutation
+counter=0
+while (counter<100){
+c1_data_p[[x_nam]]<-sample(c1_data_p[[x_nam]])
+#renormalization
+c1_data_p=(c1_data_p/rowSums(c1_data_p))*200
+out<-boot.stat(c1_data_p,indices = 1:dim(c1_data)[1],m_stop=opt_m,form=form,x_nam=x_nam)
+out_comb=rbind(out_comb,out)
+counter = counter + 1
+}
