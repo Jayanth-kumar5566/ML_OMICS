@@ -34,8 +34,7 @@ rmse<-function(model,col=i,data=c1_data){
   return(error)
 }
 
-i=2
-#for (i in 1:539){
+for (i in 1:539){
   x_nam=rownames(cr_mat)[i]
   ind1=abs(cr_mat[i,]) > 0.05 & abs(cr_mat[i,]) != 1
   cool=which(ind1, arr.ind = T)
@@ -64,45 +63,44 @@ i=2
   }
   error=rmse(model1,col=i)
   print(error)
-#}
 
   #Bootstrap distribution
-#------------Using boot-----------------  
-library(boot)
-boot.stat<-function(data,indices,m_stop,form,x_nam){
-  data<-data[indices,]
-  mod<-glmboost(form,data=data,family = Gaussian(),
-                center=TRUE,control = boost_control(mstop=m_stop,nu=0.05,trace=TRUE))
-  wghts<-coef(mod,which="")
-  x<-t(as.data.frame(wghts[-1]))
-  row.names(x)<-x_nam
-  return(x)
+  #------------Using boot-----------------  
+  library(boot)
+  boot.stat<-function(data,indices,m_stop,form,x_nam){
+    data<-data[indices,]
+    mod<-glmboost(form,data=data,family = Gaussian(),
+                  center=TRUE,control = boost_control(mstop=m_stop,nu=0.05,trace=TRUE))
+    wghts<-coef(mod,which="")
+    x<-t(as.data.frame(wghts[-1]))
+    row.names(x)<-x_nam
+    return(x)
+  }
+  
+  model.boot<-boot(c1_data,boot.stat,100,m_stop=opt_m,form=form,x_nam=x_nam)
+  #-----------Permutation with renormalization-------------
+  #copy of the data
+  c1_data_p=c1_data
+  out_comb<-x
+  #permutation
+  counter=0
+  while (counter<100){
+    c1_data_p[[x_nam]]<-sample(c1_data_p[[x_nam]])
+    #renormalization
+    c1_data_p=(c1_data_p/rowSums(c1_data_p))*200
+    out<-boot.stat(c1_data_p,indices = 1:dim(c1_data)[1],m_stop=opt_m,form=form,x_nam=x_nam)
+    out_comb=rbind(out_comb,out)
+    counter = counter + 1
+  }
+  out_comb<-out_comb[-1,]
+  #Comparing two distributions
+  for (i in 1:dim(out_comb)[2]){
+    p=wilcox.test(model.boot$t[,i],out_comb[,i],alternative = "two.sided",paired = FALSE)$p.value
+    p_m[x_nam,colnames(out_comb)[i]]<-p
+  }
 }
 
-model.boot<-boot(c1_data,boot.stat,100,m_stop=opt_m,form=form,x_nam=x_nam)
+#model.boot$t[,1] #hist values for 100 iterations of first parameter
 
-model.boot$t[,1] #hist values for 100 iterations of first parameter
-
-#-----------Permutation with renormalization-------------
-#copy of the data
-c1_data_p=c1_data
-out_comb<-x
-#permutation
-counter=0
-while (counter<100){
-c1_data_p[[x_nam]]<-sample(c1_data_p[[x_nam]])
-#renormalization
-c1_data_p=(c1_data_p/rowSums(c1_data_p))*200
-out<-boot.stat(c1_data_p,indices = 1:dim(c1_data)[1],m_stop=opt_m,form=form,x_nam=x_nam)
-out_comb=rbind(out_comb,out)
-counter = counter + 1
-}
-out_comb<-out_comb[-1,]
-out_comb[,1] #values of the first parameter
+#out_comb[,1] #values of the first parameter
 #--------------------------------------------------------
-#Comparing two distributions
-for (i in 1:dim(out_comb)[2]){
-p=wilcox.test(model.boot$t[,i],out_comb[,i],alternative = "two.sided",paired = FALSE)$p.value
-print(p)
-p_m[x_nam,colnames(out_comb)[i]]<-p
-}
