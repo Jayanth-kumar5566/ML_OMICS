@@ -21,10 +21,13 @@ library(mboost)
 cr_mat=cor(c1_data,method = "spearman") #Compute Spearman Correlation
 cr_mat[is.na(cr_mat)]<-0  # Assign 0 to NA values(NA due to zero STD)
 
-#Adjacency matrix creation
+#Adjacency matrix and p-value matrix creation
 m=matrix(0,ncol=dim(cr_mat)[1],nrow=dim(cr_mat)[2])
+p_m=matrix(1,ncol=dim(cr_mat)[1],nrow=dim(cr_mat)[2])
 m<-data.frame(m,row.names = colnames(c1_data))
+p_m<-data.frame(p_m,row.names = colnames(c1_data))
 colnames(m)<-colnames(c1_data)
+colnames(p_m)<-colnames(c1_data)
 
 rmse<-function(model,col=i,data=c1_data){
   error=sqrt(mean((predict(model,data)-data[[col]])^2))
@@ -55,7 +58,6 @@ i=2
   wghts<-coef(model1,which="")
   x<-t(as.data.frame(wghts[-1]))
   row.names(x)<-x_nam
-  
   #Appending the coefficient matrix to adjacency matrix
   for(cl in colnames(x)){
     m[x_nam,cl]<-x[x_nam,cl]
@@ -79,7 +81,7 @@ boot.stat<-function(data,indices,m_stop,form,x_nam){
 
 model.boot<-boot(c1_data,boot.stat,100,m_stop=opt_m,form=form,x_nam=x_nam)
 
-model.boot$t[,1] #hist values for iteration here 1
+model.boot$t[,1] #hist values for 100 iterations of first parameter
 
 #-----------Permutation with renormalization-------------
 #copy of the data
@@ -96,4 +98,11 @@ out_comb=rbind(out_comb,out)
 counter = counter + 1
 }
 out_comb<-out_comb[-1,]
+out_comb[,1] #values of the first parameter
 #--------------------------------------------------------
+#Comparing two distributions
+for (i in 1:dim(out_comb)[2]){
+p=wilcox.test(model.boot$t[,i],out_comb[,i],alternative = "two.sided",paired = FALSE)$p.value
+print(p)
+p_m[x_nam,colnames(out_comb)[i]]<-p
+}
