@@ -23,14 +23,16 @@ cr_mat[is.na(cr_mat)]<-0  # Assign 0 to NA values(NA due to zero STD)
 
 #Adjacency matrix and p-value matrix creation
 m=matrix(0,ncol=dim(cr_mat)[1],nrow=dim(cr_mat)[2])
-p_m=matrix(1,ncol=dim(cr_mat)[1],nrow=dim(cr_mat)[2])
+p_m=matrix(2,ncol=dim(cr_mat)[1],nrow=dim(cr_mat)[2])
 m<-data.frame(m,row.names = colnames(c1_data))
 p_m<-data.frame(p_m,row.names = colnames(c1_data))
 colnames(m)<-colnames(c1_data)
 colnames(p_m)<-colnames(c1_data)
 
-rmse<-function(model,col=i,data=c1_data){
-  error=sqrt(mean((predict(model,data)-data[[col]])^2))
+r2<-function(model,col=i,data=c1_data){
+  sse=sum((predict(model,data)-data[[col]])^2)
+  tss=sum((data[[col]]-mean(data[[col]]))^2)
+  error=1-(sse/tss)
   return(error)
 }
 
@@ -39,7 +41,7 @@ for (i in 1:539){
   ind1=abs(cr_mat[i,]) > 0.05 & abs(cr_mat[i,]) != 1
   cool=which(ind1, arr.ind = T)
   y_nam=rownames(as.data.frame(cool)) #Column names with correlation >0.05
-  if(identical(y_nam,character(0)) == TRUE){y_nam="."}
+  if(identical(y_nam,character(0)) == TRUE){next}
   print(x_nam) #Row name
   #Formula
   form=as.formula(paste(x_nam,paste(y_nam,collapse = "+"),sep="~"))
@@ -54,23 +56,22 @@ for (i in 1:539){
   if(opt_m==0){opt_m=1}
   #Choosing the optimal model
   model1[opt_m]
+  error=r2(model1,col=i)
+  if (error<0.5){next}
   wghts<-coef(model1,which="")
   x<-t(as.data.frame(wghts[-1]))
   row.names(x)<-x_nam
-  #Appending the coefficient matrix to adjacency matrix
-  for(cl in colnames(x)){
-    m[x_nam,cl]<-x[x_nam,cl]
-  }
-  error=rmse(model1,col=i)
-  print(error)
-
+    #Appending the coefficient matrix to adjacency matrix
+    for(cl in colnames(x)){
+      m[x_nam,cl]<-x[x_nam,cl]
+    }
   #Bootstrap distribution
   #------------Using boot-----------------  
   library(boot)
   boot.stat<-function(data,indices,m_stop,form,x_nam){
     data<-data[indices,]
     mod<-glmboost(form,data=data,family = Gaussian(),
-                  center=TRUE,control = boost_control(mstop=m_stop,nu=0.05,trace=TRUE))
+                  center=FALSE,control = boost_control(mstop=m_stop,nu=0.05,trace=TRUE))
     wghts<-coef(mod,which="")
     x<-t(as.data.frame(wghts[-1]))
     row.names(x)<-x_nam
@@ -99,6 +100,8 @@ for (i in 1:539){
     p_m[x_nam,colnames(out_comb)[i]]<-p
   }
 }
+
+#To do correction of multiple comparision later
 
 #model.boot$t[,1] #hist values for 100 iterations of first parameter
 
