@@ -45,13 +45,12 @@ for (i in 1:539){
   print(x_nam) #Row name
   #Formula
   form=as.formula(paste(x_nam,paste(y_nam,collapse = "+"),sep="~"))
-  glm(form,data=c1_data )
   #GLMBoosting and Model Tuning, Depends on randomness
   model1<-glmboost(form,data=c1_data,family = Gaussian(),
                    center=TRUE,control = boost_control(mstop=200,nu=0.05,trace=TRUE))
   #Induces randomness, can loop and take the nearest average integer
-  f<-cv(model1$`(weights)`,type="kfold",B=10)
-  cvm<-cvrisk(model1,folds=f)
+  f<-cv(model.weights(model1),type="kfold",B=10)
+  cvm<-cvrisk(model1,folds=f,mc.cores=4)
   opt_m<-mstop(cvm)
   if(opt_m==0){opt_m=1}
   #Choosing the optimal model
@@ -107,3 +106,48 @@ for (i in 1:539){
 
 #out_comb[,1] #values of the first parameter
 #--------------------------------------------------------
+
+#Variance Analysis
+# 
+# m=c()
+# m2=c()
+# m3=c()
+# m4=c()
+# m5=c()
+# er=c()
+# for (i in 1:539){
+#   x_nam=rownames(cr_mat)[i]
+#   ind1=abs(cr_mat[i,]) > 0.05 & abs(cr_mat[i,]) != 1
+#   cool=which(ind1, arr.ind = T)
+#   y_nam=rownames(as.data.frame(cool)) #Column names with correlation >0.05
+#   if(identical(y_nam,character(0)) == TRUE){next}
+#   print(x_nam) #Row name
+#   #Formula
+#   form=as.formula(paste(x_nam,paste(y_nam,collapse = "+"),sep="~"))
+#   model1<-glmboost(form,data=c1_data,family = Gaussian(),
+#                    center=TRUE,control = boost_control(mstop=100,nu=0.05,trace=TRUE))
+#   er=c(er,tail(model1$risk(),n=1))
+#   cvm<-cvrisk(model1,mc.cores=4)
+#   opt_m<-mstop(cvm)
+#   m=c(m,opt_m)
+#   cvm<-cvrisk(model1,mc.cores=4)
+#   opt_m<-mstop(cvm)
+#   m2=c(m2,opt_m)
+#   cvm<-cvrisk(model1,mc.cores=4)
+#   opt_m<-mstop(cvm)
+#   m3=c(m3,opt_m)
+#   cvm<-cvrisk(model1,mc.cores=4)
+#   opt_m<-mstop(cvm)
+#   m4=c(m4,opt_m)
+#   cvm<-cvrisk(model1,mc.cores=4)
+#   opt_m<-mstop(cvm)
+#   m5=c(m5,opt_m)
+# }
+# plot(er,m,col="red")
+# points(er,m2,col="blue")
+# points(er,m3,col="green")
+# points(er,m4,col="black")
+# points(er,m5,col="orange")
+# 
+# plot(y,col="red",pch=19)
+# points(er,col="blue",pch=18)
