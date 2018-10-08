@@ -94,13 +94,17 @@ for (i in 1:539){
   }
   out_comb<-out_comb[-1,]
   #Comparing two distributions
+  p_test<-c()
   for (i in 1:dim(out_comb)[2]){
     p=wilcox.test(model.boot$t[,i],out_comb[,i],alternative = "two.sided",paired = FALSE)$p.value
-    p_m[x_nam,colnames(out_comb)[i]]<-p
+    p_test<-c(p_test,p)
   }
+  #correction of multiple comparision
+  p_test<-p.adjust(p_test,method = "fdr")
+  for (i in 1:dim(out_comb)[2]){
+  p_m[x_nam,colnames(out_comb)[i]]<-p_test[i]
 }
-
-#To do correction of multiple comparision later
+}
 
 #model.boot$t[,1] #hist values for 100 iterations of first parameter
 
