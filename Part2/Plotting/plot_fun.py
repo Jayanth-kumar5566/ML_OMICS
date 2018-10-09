@@ -3,6 +3,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 Adj=pandas.read_csv("Adjacency_matrix.csv")
 p=pandas.read_csv("p_values.csv")
+ab=pandas.read_csv("c1_abund.csv")
 Adj.set_index("Unnamed: 0",inplace=True)
 p.set_index("Unnamed: 0",inplace=True)
 
@@ -37,5 +38,10 @@ G=nx.DiGraph(Adj.values)
 to_rem=list(nx.isolates(G))
 G.remove_nodes_from(to_rem)
 map(labels.pop,to_rem)
-nx.draw(G,labels=labels)
+
+ns=[ab.ix[i,'x'] for i in G.nodes()]
+
+edges,weights = zip(*nx.get_edge_attributes(G,'weight').items())
+pos=nx.random_layout(G)
+nx.draw(G,labels=labels,font_size=10,node_size=ns,edgelist=edges,edge_color=weights,edge_cmap=plt.cm.seismic,node_color='r',arrows=True)
 plt.show()

@@ -7,6 +7,7 @@ c1_data=subset(data,x==1)
 c2_data=subset(data,x==2)
 c1_data$x<-NULL
 c2_data$x<-NULL
+write.csv(colSums(c1_data),"./Plotting/c1_abund.csv")
 
 #Checking for relative abundance structure
 r_s=c()
