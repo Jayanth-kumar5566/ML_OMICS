@@ -3,7 +3,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 Adj=pandas.read_csv("Adjacency_matrix.csv")
 p=pandas.read_csv("p_values.csv")
-ab=pandas.read_csv("c1_abund.csv")
+ab=pandas.read_csv("c2_abund.csv")
 Adj.set_index("Unnamed: 0",inplace=True)
 p.set_index("Unnamed: 0",inplace=True)
 
@@ -34,14 +34,14 @@ top=int(round(len(Ad_f)*0.9999))
 #Adjacency matrix cut-off
 Adj[(Ad_f[bel]<Adj) & (Adj<Ad_f[top])]=0
 
-#-----------------------------------------------
+#----------------------------------------------
+
 labels={}
 col=Adj.columns.values
 for i in range(len(col)):
     labels[i]=str(col[i])
 
 G=nx.DiGraph(Adj.values)
-
 to_rem=list(nx.isolates(G))
 G.remove_nodes_from(to_rem)
 map(labels.pop,to_rem)

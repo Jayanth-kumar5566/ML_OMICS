@@ -3,7 +3,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 Adj=pandas.read_csv("Adjacency_matrix.csv")
 p=pandas.read_csv("p_values.csv")
-ab=pandas.read_csv("c1_abund.csv")
+ab=pandas.read_csv("c2_abund.csv")
 Adj.set_index("Unnamed: 0",inplace=True)
 p.set_index("Unnamed: 0",inplace=True)
 
@@ -20,21 +20,14 @@ p_cut_off=0.001
 ind=p>p_cut_off
 Adj[ind]=0
 
-#---------Histogram of edge weights--------
-Ad_f=Adj.values.flatten()
-plt.hist(Ad_f)
-plt.show()
-#Adj[abs(Adj)<750]=0
-#-----------------------------------------------
-
-Ad_f.sort()
-#Top 20% and Below 20%
-bel=int(round(len(Ad_f)*0.0001)) 
-top=int(round(len(Ad_f)*0.9999))
 #Adjacency matrix cut-off
-Adj[(Ad_f[bel]<Adj) & (Adj<Ad_f[top])]=0
+Adj[abs(Adj)<750]=0
 
+#---------Histogram of edge weights--------
+plt.hist(Adj.values.flatten(),bins=50)
+plt.show()
 #-----------------------------------------------
+
 labels={}
 col=Adj.columns.values
 for i in range(len(col)):
