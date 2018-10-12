@@ -24,15 +24,28 @@ Adj[ind]=0
 Ad_f=Adj.values.flatten()
 plt.hist(Ad_f)
 plt.show()
+
+plt.boxplot(Ad_f)
+plt.show()
 #Adj[abs(Adj)<750]=0
 #-----------------------------------------------
 
 Ad_f.sort()
+#Adjacency matrix cut-off
+'''
 #Top 20% and Below 20%
 bel=int(round(len(Ad_f)*0.0001)) 
 top=int(round(len(Ad_f)*0.9999))
+#Top 20 and below 20 based on the value 
+bel=int(round(max(Ad_f)*0.20))
+top=int(round(max(Ad_f)*0.20))
+
 #Adjacency matrix cut-off
 Adj[(Ad_f[bel]<Adj) & (Adj<Ad_f[top])]=0
+'''
+top=float(raw_input("Top cutoff"))
+bel=float(raw_input("Below cutoff"))
+Adj[(bel<Adj) & (Adj<top)]=0
 
 #----------------------------------------------
 
@@ -50,5 +63,5 @@ ns=[ab.ix[i,'x'] for i in G.nodes()]
 
 edges,weights = zip(*nx.get_edge_attributes(G,'weight').items())
 pos=nx.random_layout(G)
-nx.draw(G,labels=labels,font_size=10,node_size=ns,edgelist=edges,edge_color=weights,edge_cmap=plt.cm.seismic,node_color='r',arrows=True)
+nx.draw(G,labels=labels,font_size=10,node_size=ns,edgelist=edges,edge_color=weights,edge_cmap=plt.cm.seismic,node_color='r',arrows=False,width=3)
 plt.show()
