@@ -10,15 +10,15 @@ p.set_index("Unnamed: 0",inplace=True)
 #--------Selecting p-values cutoff-------------
 def p_select(Adj,p,p_cut_off,adj_cut_off):
     p.fillna(1,inplace=True)
-    ind=p>p_cut_off
-    Adj[ind]=0
+    ind=p.values>p_cut_off
+    Adj.values[ind]=0
     Adj[abs(Adj)<adj_cut_off]=0
     return(Adj)
 #-------------------------------------------
 p.fillna(1,inplace=True)
 p_cut_off=0.001
-ind=p>p_cut_off
-Adj[ind]=0
+ind=p.values>p_cut_off
+Adj.values[ind]=0
 
 #---------Histogram of edge weights--------
 Ad_f=Adj.values.flatten()
