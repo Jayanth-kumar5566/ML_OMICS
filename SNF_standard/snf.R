@@ -14,6 +14,9 @@ x=W2
 estimateNumberOfClustersGivenGraph(x)
 displayClusters(x, spectralClustering(x, K = 3))
 W = SNF(list(W1,W2),23,15)
+
+#Divide W by 0.5 W/0.5
+
 estimateNumberOfClustersGivenGraph(W)
 displayClusters(W, spectralClustering(W, K = 2))
 C=2
