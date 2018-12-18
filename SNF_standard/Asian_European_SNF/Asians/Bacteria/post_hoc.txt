@@ -1,0 +1,5 @@
+[1] "BSI_Bronchiectasis_severity_index"
+[1] "A.fumigatus_conidial_burden_qPCR"
+[1] "No_of_exacerbations_1yr_before_study"
+[1] "Disease_severity"
+[1] "Oral.steroids..Yes.0..No.1."

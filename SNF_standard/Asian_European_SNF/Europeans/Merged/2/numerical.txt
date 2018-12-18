@@ -1,0 +1,8 @@
+[1] "A.terreus_conidial_burden_qPCR"
+[1] 1.931825e-05
+[1] "C 1"
+[1] "Median +/- variance"
+[1] "2726.6 +/- 71505941.0083071"
+[1] "C 2"
+[1] "Median +/- variance"
+[1] "6630.1 +/- 2128210988.71891"
